@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.repository.UserRepository;
+import vn.hoidanit.jobhunter.service.error.IdInvaliException;
 
 @Service
 public class UserService {
@@ -45,8 +46,8 @@ public class UserService {
         return currentUser;
     }
 
-    public void handleDeleteUser(Long Id) {
-        this.userRepository.deleteById(Id);
+    public void handleDeleteUser(Long id) {
+        this.userRepository.deleteById(id);
     }
 
 }

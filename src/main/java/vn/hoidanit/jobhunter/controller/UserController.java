@@ -4,9 +4,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.service.UserService;
+import vn.hoidanit.jobhunter.service.error.IdInvaliException;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,13 +20,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class UserController {
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/users")
-    public User createNewUser(@RequestBody User user) {
-        User newUser = this.userService.handleCreateUser(user);
+    public User createNewUser(@RequestBody User userinput) {
+        String hashPassword = this.passwordEncoder.encode(userinput.getPassword());
+        userinput.setPassword(hashPassword);
+        User newUser = this.userService.handleCreateUser(userinput);
         return newUser;
     }
 
@@ -47,7 +54,10 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public void deletUser(@PathVariable("id") long id) {
+    public void deletUser(@PathVariable("id") long id) throws IdInvaliException {
+        if (id > 1500) {
+            throw new IdInvaliException("ID qua to");
+        }
         this.userService.handleDeleteUser(id);
     }
 
