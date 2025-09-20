@@ -20,15 +20,14 @@ import vn.hoidanit.jobhunter.domain.RestResponse;
 public class GlobalException {
 
     @ExceptionHandler(value = {
-            IdInvaliException.class,
             UsernameNotFoundException.class,
             BadCredentialsException.class
     })
-    public ResponseEntity<RestResponse<Object>> handleAllException(IdInvaliException invaliException) {
+    public ResponseEntity<RestResponse<Object>> handleAllException(Exception ex) {
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
-        res.setMessage("IdInvaliException");
-        res.setError(invaliException.getMessage());
+        res.setMessage("Exception occurs ...");
+        res.setError(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
