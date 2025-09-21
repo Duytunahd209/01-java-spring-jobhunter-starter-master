@@ -55,9 +55,6 @@ public class UserController {
 
     @DeleteMapping("/users/{id}")
     public void deletUser(@PathVariable("id") long id) throws IdInvaliException {
-        if (id > 1500) {
-            throw new IdInvaliException("ID qua to");
-        }
         this.userService.handleDeleteUser(id);
     }
 
