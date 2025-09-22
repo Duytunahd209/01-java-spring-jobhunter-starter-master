@@ -1,13 +1,15 @@
 package vn.hoidanit.jobhunter.service;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import vn.hoidanit.jobhunter.domain.User;
+import vn.hoidanit.jobhunter.domain.dto.Meta;
+import vn.hoidanit.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.repository.UserRepository;
-import vn.hoidanit.jobhunter.util.error.IdInvaliException;
 
 @Service
 public class UserService {
@@ -22,8 +24,19 @@ public class UserService {
         return this.userRepository.save(user);
     }
 
-    public List<User> handleGetAllUser() {
-        return this.userRepository.findAll();
+    public ResultPaginationDTO handleGetAllUser(Pageable pageable) {
+        Page<User> pageUser = this.userRepository.findAll(pageable);
+        ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
+        Meta meta = new Meta();
+        meta.setPage(pageUser.getNumber());
+        meta.setPageSize(pageUser.getSize());
+        meta.setPages(pageUser.getTotalPages());
+        meta.setTotal(pageUser.getTotalElements());
+
+        resultPaginationDTO.setMeta(meta);
+        resultPaginationDTO.setResult(pageUser.getContent());
+
+        return resultPaginationDTO;
     }
 
     public User fetchUserById(Long id) {
@@ -42,8 +55,9 @@ public class UserService {
             currentUser.setEmail(userinput.getEmail());
             currentUser.setPassword(userinput.getPassword());
             currentUser = this.userRepository.save(currentUser);
+            return currentUser;
         }
-        return currentUser;
+        return null;
     }
 
     public void handleDeleteUser(Long id) {
