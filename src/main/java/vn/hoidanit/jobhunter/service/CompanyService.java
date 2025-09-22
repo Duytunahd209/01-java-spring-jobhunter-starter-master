@@ -29,7 +29,7 @@ public class CompanyService {
         Page<Company> pageCompany = this.companyRepository.findAll(spec, pageable);
         ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
         Meta meta = new Meta();
-        meta.setPage(pageCompany.getNumber());
+        meta.setPage(pageCompany.getNumber() + 1);
         meta.setPageSize(pageCompany.getSize());
         meta.setPages(pageCompany.getTotalPages());
         meta.setTotal(pageCompany.getTotalElements());
