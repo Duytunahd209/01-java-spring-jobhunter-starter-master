@@ -7,6 +7,8 @@ import com.turkraft.springfilter.boot.Filter;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.service.UserService;
+import vn.hoidanit.jobhunter.util.anotation.APIMessage;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -39,6 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
+    @APIMessage("Fetch all user")
     public ResponseEntity<ResultPaginationDTO> getAllUsers(
             @Filter Specification<User> spec,
             Pageable pageable) {
