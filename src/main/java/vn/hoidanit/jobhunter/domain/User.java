@@ -1,12 +1,21 @@
 package vn.hoidanit.jobhunter.domain;
 
+import java.sql.Date;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import vn.hoidanit.jobhunter.util.constant.GenderEnum;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "users")
 public class User {
 
@@ -17,36 +26,15 @@ public class User {
     private String email;
     private String password;
 
-    public Long getId() {
-        return id;
-    }
+    private int age;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Enumerated(EnumType.STRING)
+    private GenderEnum gender;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
+    private String refreshToken;
+    private String address;
+    private Date createAt;
+    private Date updateAt;
+    private String createBy;
+    private String updateBy;
 }
