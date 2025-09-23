@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.dto.Meta;
+import vn.hoidanit.jobhunter.domain.dto.ResCreateUserDTO;
 import vn.hoidanit.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.repository.UserRepository;
 
@@ -24,6 +25,22 @@ public class UserService {
 
     public User handleCreateUser(User user) {
         return this.userRepository.save(user);
+    }
+
+    public boolean isEmailExist(String email) {
+        return this.userRepository.existsByEmail(email);
+    }
+
+    public ResCreateUserDTO ConvertToResCreateDTO(User user) {
+        ResCreateUserDTO resCreateUserDTO = new ResCreateUserDTO();
+        resCreateUserDTO.setId(user.getId());
+        resCreateUserDTO.setName(user.getName());
+        resCreateUserDTO.setEmail(user.getEmail());
+        resCreateUserDTO.setAge(user.getAge());
+        resCreateUserDTO.setGender(user.getGender());
+        resCreateUserDTO.setAddress(user.getAddress());
+        resCreateUserDTO.setCreateAt(user.getCreatedAt());
+        return resCreateUserDTO;
     }
 
     public ResultPaginationDTO handleGetAllUser(Specification<User> spec, Pageable pageable) {
