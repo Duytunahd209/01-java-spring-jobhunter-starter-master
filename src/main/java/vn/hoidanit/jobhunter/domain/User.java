@@ -3,6 +3,7 @@ package vn.hoidanit.jobhunter.domain;
 import java.sql.Date;
 import java.time.Instant;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -38,7 +39,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
 
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String refreshToken;
+
     private String address;
     private Instant createdAt;
     private Instant updatedAt;
