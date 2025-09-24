@@ -41,10 +41,10 @@ public class AuthController {
         // xác thực người dùng => cần viết hàm loadUserByUsername
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        // Create a token
+        // Create a access token
         ResLoginDTO res = new ResLoginDTO();
 
-        String access_token = this.securityUtil.createToken(authentication);
+        String access_token = this.securityUtil.createAccessToken(authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         res.setAccessToken(access_token);
 
@@ -56,6 +56,9 @@ public class AuthController {
                     userCurrent.getName());
             res.setUser(userLogin);
         }
+
+        // Create a refresh token
+        String refresh_token = this.securityUtil.createRefreshToken(loginDto.getUsername(), res);
 
         return ResponseEntity.ok().body(res);
     }
