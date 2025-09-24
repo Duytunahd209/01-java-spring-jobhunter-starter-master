@@ -2,6 +2,7 @@ package vn.hoidanit.jobhunter.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.dto.Meta;
 import vn.hoidanit.jobhunter.domain.dto.ResCreateUserDTO;
+import vn.hoidanit.jobhunter.domain.dto.ResUpdateUserDTO;
+import vn.hoidanit.jobhunter.domain.dto.ResUserDTO;
 import vn.hoidanit.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.repository.UserRepository;
 
@@ -43,6 +46,19 @@ public class UserService {
         return resCreateUserDTO;
     }
 
+    public ResUserDTO ConvertToResUserDTO(User user) {
+        ResUserDTO resUserDTO = new ResUserDTO();
+        resUserDTO.setId(user.getId());
+        resUserDTO.setName(user.getName());
+        resUserDTO.setEmail(user.getEmail());
+        resUserDTO.setAge(user.getAge());
+        resUserDTO.setGender(user.getGender());
+        resUserDTO.setAddress(user.getAddress());
+        resUserDTO.setCreateAt(user.getCreatedAt());
+        resUserDTO.setUpdateAt(user.getUpdatedAt());
+        return resUserDTO;
+    }
+
     public ResultPaginationDTO handleGetAllUser(Specification<User> spec, Pageable pageable) {
         Page<User> pageUser = this.userRepository.findAll(spec, pageable);
         ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
@@ -53,7 +69,21 @@ public class UserService {
         meta.setTotal(pageUser.getTotalElements());
 
         resultPaginationDTO.setMeta(meta);
-        resultPaginationDTO.setResult(pageUser.getContent());
+
+        // Remove sensitive data
+        List<ResUserDTO> listUser = pageUser.getContent()
+                .stream().map(item -> new ResUserDTO(
+                        item.getId(),
+                        item.getName(),
+                        item.getEmail(),
+                        item.getAge(),
+                        item.getGender(),
+                        item.getAddress(),
+                        item.getCreatedAt(),
+                        item.getUpdatedAt()))
+                .collect(Collectors.toList());
+
+        resultPaginationDTO.setResult(listUser);
 
         return resultPaginationDTO;
     }
@@ -71,12 +101,24 @@ public class UserService {
 
         if (currentUser != null) {
             currentUser.setName(userinput.getName());
-            currentUser.setEmail(userinput.getEmail());
-            currentUser.setPassword(userinput.getPassword());
+            currentUser.setAddress(userinput.getAddress());
+            currentUser.setGender(userinput.getGender());
+            currentUser.setAge(userinput.getAge());
             currentUser = this.userRepository.save(currentUser);
             return currentUser;
         }
         return null;
+    }
+
+    public ResUpdateUserDTO ConvertToResUpdateUserDTO(User user) {
+        ResUpdateUserDTO resUserDTO = new ResUpdateUserDTO();
+        resUserDTO.setId(user.getId());
+        resUserDTO.setName(user.getName());
+        resUserDTO.setAge(user.getAge());
+        resUserDTO.setGender(user.getGender());
+        resUserDTO.setAddress(user.getAddress());
+        resUserDTO.setUpdateAt(user.getUpdatedAt());
+        return resUserDTO;
     }
 
     public void handleDeleteUser(Long id) {

@@ -7,6 +7,8 @@ import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.dto.ResCreateUserDTO;
+import vn.hoidanit.jobhunter.domain.dto.ResUpdateUserDTO;
+import vn.hoidanit.jobhunter.domain.dto.ResUserDTO;
 import vn.hoidanit.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.service.UserService;
 import vn.hoidanit.jobhunter.util.anotation.APIMessage;
@@ -61,13 +63,21 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserByID(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(this.userService.fetchUserById(id));
+    public ResponseEntity<ResUserDTO> getUserByID(@PathVariable("id") Long id) throws IdInvaliException {
+        User currentUser = this.userService.fetchUserById(id);
+        if (currentUser == null) {
+            throw new IdInvaliException("User with ID = " + id + " do not exist!");
+        }
+        return ResponseEntity.ok(this.userService.ConvertToResUserDTO(currentUser));
     }
 
     @PutMapping("/users")
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
-        return ResponseEntity.ok().body(this.userService.handleUpdateUser(user));
+    public ResponseEntity<ResUpdateUserDTO> updateUser(@RequestBody User user) throws IdInvaliException {
+        User updateUser = this.userService.handleUpdateUser(user);
+        if (updateUser == null) {
+            throw new IdInvaliException("User with ID = " + user.getId() + " do not exist!");
+        }
+        return ResponseEntity.ok().body(this.userService.ConvertToResUpdateUserDTO(updateUser));
     }
 
     @DeleteMapping("/users/{id}")
