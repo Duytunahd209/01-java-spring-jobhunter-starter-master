@@ -14,5 +14,5 @@ public class ResUpdateUserDTO {
     private int age;
     private GenderEnum gender;
     private String address;
-    private Instant updateAt;
+    private Instant updatedAt;
 }

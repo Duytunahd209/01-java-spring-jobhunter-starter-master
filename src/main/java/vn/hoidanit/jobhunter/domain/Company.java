@@ -29,8 +29,8 @@ public class Company {
     private String description;
     private String address;
     private String logo;
-    private Instant createAt;
-    private Instant updateAt;
+    private Instant createdAt;
+    private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
 
@@ -39,7 +39,7 @@ public class Company {
         this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent()
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        this.createAt = Instant.now();
+        this.createdAt = Instant.now();
     }
 
     @PreUpdate
@@ -47,6 +47,6 @@ public class Company {
         this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent()
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        this.updateAt = Instant.now();
+        this.updatedAt = Instant.now();
     }
 }

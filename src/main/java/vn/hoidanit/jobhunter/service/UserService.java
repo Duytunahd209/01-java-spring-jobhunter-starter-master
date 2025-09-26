@@ -42,7 +42,7 @@ public class UserService {
         resCreateUserDTO.setAge(user.getAge());
         resCreateUserDTO.setGender(user.getGender());
         resCreateUserDTO.setAddress(user.getAddress());
-        resCreateUserDTO.setCreateAt(user.getCreatedAt());
+        resCreateUserDTO.setCreatedAt(user.getCreatedAt());
         return resCreateUserDTO;
     }
 
@@ -54,8 +54,8 @@ public class UserService {
         resUserDTO.setAge(user.getAge());
         resUserDTO.setGender(user.getGender());
         resUserDTO.setAddress(user.getAddress());
-        resUserDTO.setCreateAt(user.getCreatedAt());
-        resUserDTO.setUpdateAt(user.getUpdatedAt());
+        resUserDTO.setCreatedAt(user.getCreatedAt());
+        resUserDTO.setUpdatedAt(user.getUpdatedAt());
         return resUserDTO;
     }
 
@@ -117,7 +117,7 @@ public class UserService {
         resUserDTO.setAge(user.getAge());
         resUserDTO.setGender(user.getGender());
         resUserDTO.setAddress(user.getAddress());
-        resUserDTO.setUpdateAt(user.getUpdatedAt());
+        resUserDTO.setUpdatedAt(user.getUpdatedAt());
         return resUserDTO;
     }
 
