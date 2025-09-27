@@ -11,42 +11,53 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import vn.hoidanit.jobhunter.domain.dto.Skill;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
+import vn.hoidanit.jobhunter.util.constant.LevelEnum;
 
-@Table(name = "companies")
 @Entity
+@Table(name = "jobs")
 @Getter
 @Setter
-public class Company {
+public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @NotBlank(message = "Name do not blank")
+    private Long id;
     private String name;
+
+    private String location;
+    private double salary;
+    private int quantity;
+    private LevelEnum level;
+
     @Column(columnDefinition = "MEDIUMTEXT")
     private String description;
-    private String address;
-    private String logo;
+    private Instant startDate;
+    private Instant endDate;
+    private boolean isActive;
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
 
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
-    @JsonIgnore
-    List<User> users;
+    // job
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 
-    // company
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JsonIgnore
-    List<Job> jobs;
+    @JoinTable(name = "job_skill", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
+    private List<Skill> skills;
 
     @PrePersist
     public void handleBeforeCreate() {
@@ -63,4 +74,5 @@ public class Company {
                 : "";
         this.updatedAt = Instant.now();
     }
+
 }
