@@ -1,4 +1,4 @@
-package vn.hoidanit.jobhunter.domain.dto;
+package vn.hoidanit.jobhunter.domain;
 
 import java.time.Instant;
 import java.util.List;
@@ -19,7 +19,6 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import vn.hoidanit.jobhunter.domain.Job;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
 
 @Getter
