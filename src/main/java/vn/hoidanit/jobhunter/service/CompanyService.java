@@ -12,18 +12,22 @@ import vn.hoidanit.jobhunter.domain.Company;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.dto.Response.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.repository.CompanyRepository;
+import vn.hoidanit.jobhunter.repository.ResumeRepository;
 import vn.hoidanit.jobhunter.repository.UserRepository;
 
 @Service
 public class CompanyService {
 
+    private final ResumeRepository resumeRepository;
+
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
 
     public CompanyService(CompanyRepository companyRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository, ResumeRepository resumeRepository) {
         this.companyRepository = companyRepository;
         this.userRepository = userRepository;
+        this.resumeRepository = resumeRepository;
     }
 
     public Company handleCreateCompany(Company company) {
@@ -79,6 +83,10 @@ public class CompanyService {
             this.userRepository.deleteAll(users);
         }
         this.companyRepository.deleteById(id);
+    }
+
+    public Optional<Company> fetchById(long id) {
+        return this.companyRepository.findById(id);
     }
 
 }

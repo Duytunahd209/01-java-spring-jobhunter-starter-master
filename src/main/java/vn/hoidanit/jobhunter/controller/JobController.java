@@ -54,7 +54,7 @@ public class JobController {
         if (!currentJob.isPresent()) {
             throw new IdInvaliException("Job not found !");
         }
-        return ResponseEntity.ok().body(this.jobService.handleUpdateJob(job));
+        return ResponseEntity.ok().body(this.jobService.handleUpdateJob(job, currentJob.get()));
     }
 
     @DeleteMapping("/jobs/{id}")
