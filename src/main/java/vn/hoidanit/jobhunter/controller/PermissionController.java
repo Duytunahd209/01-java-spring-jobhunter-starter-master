@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -35,7 +36,7 @@ public class PermissionController {
         this.permissionService = permissionService;
     }
 
-    @GetMapping("/permissions")
+    @PostMapping("/permissions")
     @APIMessage("Create a permission")
     public ResponseEntity<Permission> create(@Valid @RequestBody Permission p) throws IdInvaliException {
         // check exist
