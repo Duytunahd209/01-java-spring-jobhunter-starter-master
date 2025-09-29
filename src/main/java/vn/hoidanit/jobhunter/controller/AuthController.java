@@ -64,12 +64,13 @@ public class AuthController {
                         ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
                                         userCurrent.getId(),
                                         userCurrent.getEmail(),
-                                        userCurrent.getName());
+                                        userCurrent.getName(),
+                                        userCurrent.getRole());
                         res.setUser(userLogin);
                 }
 
                 // Create a access token
-                String access_token = this.securityUtil.createAccessToken(authentication.getName(), res.getUser());
+                String access_token = this.securityUtil.createAccessToken(authentication.getName(), res);
                 res.setAccessToken(access_token);
 
                 // Create a refresh token
@@ -104,6 +105,7 @@ public class AuthController {
                         userLogin.setId(userCurrent.getId());
                         userLogin.setEmail(userCurrent.getEmail());
                         userLogin.setName(userCurrent.getName());
+                        userLogin.setRole(userCurrent.getRole());
                         userGetAccount.setUser(userLogin);
                 }
                 return ResponseEntity.ok().body(userGetAccount);
@@ -131,12 +133,13 @@ public class AuthController {
                         ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
                                         userCurrent.getId(),
                                         userCurrent.getEmail(),
-                                        userCurrent.getName());
+                                        userCurrent.getName(),
+                                        currentUser.getRole());
                         res.setUser(userLogin);
                 }
 
                 // Create a access token
-                String access_token = this.securityUtil.createAccessToken(email, res.getUser());
+                String access_token = this.securityUtil.createAccessToken(email, res);
                 res.setAccessToken(access_token);
 
                 // Create a refresh token
