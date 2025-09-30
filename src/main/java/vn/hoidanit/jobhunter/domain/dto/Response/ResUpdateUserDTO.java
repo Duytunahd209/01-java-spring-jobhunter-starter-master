@@ -18,12 +18,22 @@ public class ResUpdateUserDTO {
     private String address;
     private Instant updatedAt;
     private CompanyUser company;
+    private RoleUser role;
 
     @Getter
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class CompanyUser {
+        private Long id;
+        private String name;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RoleUser {
         private Long id;
         private String name;
 

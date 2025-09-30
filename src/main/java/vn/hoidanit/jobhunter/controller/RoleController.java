@@ -48,9 +48,10 @@ public class RoleController {
             throw new IdInvaliException("Role with id = " + r.getId() + " is not exist");
         }
         // check exist
-        if (this.roleService.existByName(r.getName())) {
-            throw new IdInvaliException("Role with name " + r.getName() + " is exists already");
-        }
+        // if (this.roleService.existByName(r.getName())) {
+        // throw new IdInvaliException("Role with name " + r.getName() + " is exists
+        // already");
+        // }
         return ResponseEntity.ok().body(this.roleService.update(r));
     }
 

@@ -97,7 +97,7 @@ public class UserService {
             resUserDTO.setCompany(resCompany);
         }
 
-        // check user
+        // check role
         if (user.getRole() != null) {
             resUser.setId(user.getRole().getId());
             resUser.setName(user.getRole().getName());
@@ -136,24 +136,24 @@ public class UserService {
         return null;
     }
 
-    public User handleUpdateUser(User userinput) {
-        User currentUser = this.fetchUserById(userinput.getId());
+    public User handleUpdateUser(User userInput) {
+        User currentUser = this.fetchUserById(userInput.getId());
 
         if (currentUser != null) {
-            currentUser.setName(userinput.getName());
-            currentUser.setAddress(userinput.getAddress());
-            currentUser.setGender(userinput.getGender());
-            currentUser.setAge(userinput.getAge());
+            currentUser.setName(userInput.getName());
+            currentUser.setAddress(userInput.getAddress());
+            currentUser.setGender(userInput.getGender());
+            currentUser.setAge(userInput.getAge());
 
             // Check company
-            if (userinput.getCompany() != null) {
+            if (userInput.getCompany() != null) {
                 Optional<Company> optCompany = this.companyService.findCompanyById(
-                        userinput.getCompany().getId());
+                        userInput.getCompany().getId());
                 currentUser.setCompany(optCompany.isPresent() ? optCompany.get() : null);
             }
             // Check exist role
-            if (currentUser.getRole() != null) {
-                Role r = this.roleService.fetchById(currentUser.getRole().getId());
+            if (userInput.getRole() != null) {
+                Role r = this.roleService.fetchById(userInput.getRole().getId());
                 currentUser.setRole(r);
             }
             currentUser = this.userRepository.save(currentUser);
@@ -165,6 +165,7 @@ public class UserService {
     public ResUpdateUserDTO ConvertToResUpdateUserDTO(User user) {
         ResUpdateUserDTO resUserDTO = new ResUpdateUserDTO();
         ResUpdateUserDTO.CompanyUser resCompany = new ResUpdateUserDTO.CompanyUser();
+        ResUpdateUserDTO.RoleUser resUser = new ResUpdateUserDTO.RoleUser();
 
         resUserDTO.setId(user.getId());
         resUserDTO.setName(user.getName());
@@ -178,6 +179,13 @@ public class UserService {
             resCompany.setId(user.getCompany().getId());
             resCompany.setName(user.getCompany().getName());
             resUserDTO.setCompany(resCompany);
+        }
+
+        // check role
+        if (user.getRole() != null) {
+            resUser.setId(user.getRole().getId());
+            resUser.setName(user.getRole().getName());
+            resUserDTO.setRole(resUser);
         }
 
         return resUserDTO;
