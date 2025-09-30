@@ -1,5 +1,7 @@
 package vn.hoidanit.jobhunter.controller;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
+import vn.hoidanit.jobhunter.domain.Role;
 import vn.hoidanit.jobhunter.domain.Role;
 import vn.hoidanit.jobhunter.domain.dto.Response.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.service.RoleService;
@@ -72,5 +75,16 @@ public class RoleController {
             @Filter Specification<Role> spec,
             Pageable pageable) {
         return ResponseEntity.ok().body(this.roleService.getAll(spec, pageable));
+    }
+
+    @GetMapping("/roles/{id}")
+    @APIMessage("Get a role by id")
+    public ResponseEntity<Role> getRoleById(@PathVariable("id") Long id) throws IdInvaliException {
+
+        Role currentRole = this.roleService.fetchById(id);
+        if (currentRole == null) {
+            throw new IdInvaliException("Role with id " + id + " not found");
+        }
+        return ResponseEntity.ok(currentRole);
     }
 }
