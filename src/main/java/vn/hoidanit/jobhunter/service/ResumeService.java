@@ -7,10 +7,16 @@ import java.util.stream.Collectors;
 
 import javax.print.attribute.standard.JobImpressionsSupported;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import com.turkraft.springfilter.converter.FilterSpecification;
+import com.turkraft.springfilter.converter.FilterSpecificationConverter;
+import com.turkraft.springfilter.parser.FilterParser;
+import com.turkraft.springfilter.parser.node.FilterNode;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -28,6 +34,7 @@ import vn.hoidanit.jobhunter.domain.dto.Response.resume.ResUpdateResumeDTO;
 import vn.hoidanit.jobhunter.repository.JobRepository;
 import vn.hoidanit.jobhunter.repository.ResumeRepository;
 import vn.hoidanit.jobhunter.repository.UserRepository;
+import vn.hoidanit.jobhunter.util.SecurityUtil;
 import vn.hoidanit.jobhunter.util.constant.GenderEnum;
 import vn.hoidanit.jobhunter.util.constant.ResumeStateEnum;
 
@@ -37,6 +44,11 @@ public class ResumeService {
     private final ResumeRepository resumeRepository;
     private final UserRepository userRepository;
     private final JobRepository jobRepository;
+    @Autowired
+    private FilterParser filterParser;
+
+    @Autowired
+    private FilterSpecificationConverter filterSpecificationConverter;
 
     public ResumeService(ResumeRepository resumeRepository,
             UserRepository userRepository,
@@ -116,6 +128,34 @@ public class ResumeService {
     }
 
     public ResultPaginationDTO fetchAll(Specification<Resume> spec, Pageable pageable) {
+        Page<Resume> pageSkill = this.resumeRepository.findAll(spec, pageable);
+        ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
+        ResultPaginationDTO.Meta meta = new ResultPaginationDTO.Meta();
+        meta.setPage(pageSkill.getNumber() + 1);
+        meta.setPageSize(pageSkill.getSize());
+        meta.setPages(pageSkill.getTotalPages());
+        meta.setTotal(pageSkill.getTotalElements());
+
+        resultPaginationDTO.setMeta(meta);
+
+        List<ResFetchResumeDTO> listResume = pageSkill.getContent()
+                .stream().map(item -> this.getResume(item))
+                .collect(Collectors.toList());
+
+        resultPaginationDTO.setResult(listResume);
+
+        return resultPaginationDTO;
+    }
+
+    public ResultPaginationDTO fetchResumeByUser(Pageable pageable) {
+        // query builder
+        // Get email
+        String email = SecurityUtil.getCurrentUserLogin().isPresent()
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+        FilterNode node = filterParser.parse("email='" + email + "'");
+        FilterSpecification<Resume> spec = filterSpecificationConverter.convert(node);
+
         Page<Resume> pageSkill = this.resumeRepository.findAll(spec, pageable);
         ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
         ResultPaginationDTO.Meta meta = new ResultPaginationDTO.Meta();
